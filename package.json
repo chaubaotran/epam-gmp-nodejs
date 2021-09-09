@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "task1": "nodemon task1/index.js",
     "task2": "nodemon task2/index.js",
-    "task3/task1": "nodemon --exec babel-node task3/task1/index.js",
-    "task3/task2": "nodemon --exec babel-node task3/task2/index.js"
+    "task3/task1": "nodemon --exec npx babel-node task3/task1/index.js",
+    "task3/task2": "nodemon --exec npx babel-node task3/task2/index.js"
   },
   "keywords": [],
   "author": "",

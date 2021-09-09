@@ -7,9 +7,12 @@ const txtFilePath = 'task2/result.txt';
 csv()
   .fromFile(csvFilePath)
   .then(function (jsonObj) {
-    jsonObj.forEach(function (line) {
-      fs.appendFileSync(txtFilePath, JSON.stringify(line) + '\n', function (err) {
+    jsonObj.forEach(function (item) {
+      try {
+        fs.appendFileSync(txtFilePath, `${JSON.stringify(item)}\n`);
+        console.log('Saved');
+      } catch (err) {
         console.log(err);
-      });
+      }
     });
   });
