@@ -1,7 +1,7 @@
-import express, { Response, Request, NextFunction } from "express";
+import express, { NextFunction, Request, Response } from "express";
+import Joi from "joi";
 import { find } from "lodash";
 import { v4 } from "uuid";
-import Joi from "joi";
 
 const app = express();
 app.use(express.json());
@@ -13,6 +13,7 @@ interface User {
   age: number;
   isDeleted: boolean;
 }
+
 const users: Array<User> = [];
 
 const userSchema = Joi.object({
@@ -24,7 +25,7 @@ const userSchema = Joi.object({
 type UserSchema = typeof userSchema;
 
 const userValidator = (schema: UserSchema) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body);
     if (error) {
       res.status(400).send(error.details);
@@ -36,7 +37,26 @@ const userValidator = (schema: UserSchema) => {
 };
 
 app.get("/users", (req: Request, res: Response) => {
-  res.status(200).json(users.filter((user) => !user.isDeleted));
+  const loginSubstring = req.query.loginSubstring as string;
+  const limit = (req.query.limit as string) || "3";
+
+  if (!loginSubstring) {
+    res.status(200).json(users.filter((user) => !user.isDeleted));
+  }
+
+  const filteredUsers = users
+    .filter(
+      (user) =>
+        user.login.includes(loginSubstring.toString()) && !user.isDeleted
+    )
+    .sort((a, b) => a.login.localeCompare(b.login))
+    .slice(0, parseInt(limit));
+
+  if (filteredUsers.length === 0) {
+    res.status(404).send("No user matches the substring");
+  }
+
+  res.status(200).json(filteredUsers);
 });
 
 app.get("/users/:id", (req: Request, res: Response) => {
