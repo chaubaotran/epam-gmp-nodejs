@@ -18,7 +18,9 @@ const users: Array<User> = [];
 
 const userSchema = Joi.object({
   login: Joi.string().required(),
-  password: Joi.string().required().alphanum(),
+  password: Joi.string().pattern(
+    new RegExp("^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$")
+  ),
   age: Joi.number().required().min(4).max(130),
 });
 
@@ -42,6 +44,7 @@ app.get("/users", (req: Request, res: Response) => {
 
   if (!loginSubstring) {
     res.status(200).json(users.filter((user) => !user.isDeleted));
+    return;
   }
 
   const filteredUsers = users
@@ -54,6 +57,7 @@ app.get("/users", (req: Request, res: Response) => {
 
   if (filteredUsers.length === 0) {
     res.status(404).send("No user matches the substring");
+    return;
   }
 
   res.status(200).json(filteredUsers);
@@ -66,6 +70,7 @@ app.get("/users/:id", (req: Request, res: Response) => {
 
   if (!userToFind) {
     res.status(404).send("User not found");
+    return;
   }
 
   res.status(200).json(userToFind);
