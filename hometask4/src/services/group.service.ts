@@ -16,7 +16,19 @@ export class GroupService {
 
   public static getGroupById(id: string) {
     try {
-      return GroupModel.findByPk(id);
+      return GroupModel.findOne({
+        where: { id: id },
+        include: [
+          {
+            model: UserModel,
+            as: "users",
+            attributes: ["login", "age"],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
     } catch (error) {
       throw new Error(error);
     }
@@ -74,7 +86,10 @@ export class GroupService {
 
   public static async addUsersToGroup(groupId: string, userIds: string[]) {
     try {
-      const group = await GroupModel.findByPk(groupId);
+      const group: any = await GroupModel.findOne({
+        where: { id: groupId },
+        include: UserModel,
+      });
 
       if (!group) {
         return;

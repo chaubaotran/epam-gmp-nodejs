@@ -2,6 +2,7 @@ import { Op } from "sequelize";
 import { v4 } from "uuid";
 
 import UserModel from "../models/user";
+import GroupModel from "../models/group";
 import UserGroupModel from "../models/user-group";
 import { CreateUserRequestDto, UpdateUserRequestDto } from "../dtos/user";
 
@@ -32,7 +33,19 @@ export class UserService {
 
   public static getUserById(id: string) {
     try {
-      return UserModel.findByPk(id);
+      return UserModel.findOne({
+        where: { id: id, isDeleted: false },
+        include: [
+          {
+            model: GroupModel,
+            as: "groups",
+            attributes: ["name", "permissions"],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
     } catch (error) {
       throw new Error(error);
     }

@@ -1,9 +1,8 @@
+import db from "../config/database";
 import UserModel from "../models/user";
 import GroupModel from "../models/group";
 import UserGroupModel from "../models/user-group";
 import { Permissions } from "../shared/enum";
-
-import db from "../config/database";
 
 const userData = [
   {
@@ -51,26 +50,26 @@ const groupData = [
   },
 ];
 
-const initModels = async () => {
+export default async () => {
   await db.sync({ force: true });
 
   await UserModel.bulkCreate(userData).then(() =>
-    console.log("User data created.")
+    console.log("User data generated.")
   );
 
   await GroupModel.bulkCreate(groupData).then(() =>
-    console.log("Group data created.")
+    console.log("Group data generated.")
   );
 
   UserModel.belongsToMany(GroupModel, {
-    through: "users-groups",
+    through: UserGroupModel,
+    foreignKey: "userId",
+    onDelete: "CASCADE",
   });
 
   GroupModel.belongsToMany(UserModel, {
-    through: "users-groups",
+    through: UserGroupModel,
+    foreignKey: "groupId",
+    onDelete: "CASCADE",
   });
-};
-
-export default async () => {
-  initModels();
 };
