@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "hometask2": "nodemon hometask2/index.ts",
     "hometask3": "nodemon hometask3/src/app.ts",
     "hometask4": "nodemon hometask4/src/app.ts",
     "hometask5": "nodemon hometask5/src/app.ts",
