@@ -5,107 +5,109 @@ import UserModel from "../models/user";
 import GroupModel from "../models/group";
 import UserGroupModel from "../models/user-group";
 import { CreateUserRequestDto, UpdateUserRequestDto } from "../dtos/user";
+import { NotFoundError } from "../shared/error";
+import { ErrorMessages } from "../shared/enum";
 
 export class UserService {
-  public static getUsers(loginSubstring: string, limit: number) {
-    try {
-      if (!loginSubstring) {
-        return UserModel.findAll({
-          where: {
-            isDeleted: false,
-          },
-        });
-      }
-
-      return UserModel.findAll({
+  public static async getUsers(loginSubstring: string, limit: number) {
+    if (!loginSubstring) {
+      const users = await UserModel.findAll({
         where: {
-          login: {
-            [Op.iLike]: `%${loginSubstring}%`,
-          },
           isDeleted: false,
         },
-        limit,
       });
-    } catch (error) {
-      throw new Error(error);
+
+      if (users.length === 0) {
+        throw new NotFoundError(ErrorMessages.USERS_NOT_FOUND);
+      }
+
+      return users;
     }
+
+    const users = await UserModel.findAll({
+      where: {
+        login: {
+          [Op.iLike]: `%${loginSubstring}%`,
+        },
+        isDeleted: false,
+      },
+      limit,
+    });
+
+    if (users.length === 0) {
+      throw new NotFoundError(ErrorMessages.USERS_NOT_FOUND);
+    }
+
+    return users;
   }
 
-  public static getUserById(id: string) {
-    try {
-      return UserModel.findOne({
-        where: { id: id, isDeleted: false },
-        include: [
-          {
-            model: GroupModel,
-            as: "groups",
-            attributes: ["name", "permissions"],
-            through: {
-              attributes: [],
-            },
+  public static async getUserById(id: string) {
+    const user = await UserModel.findOne({
+      where: { id: id, isDeleted: false },
+      include: [
+        {
+          model: GroupModel,
+          as: "groups",
+          attributes: ["name", "permissions"],
+          through: {
+            attributes: [],
           },
-        ],
-      });
-    } catch (error) {
-      throw new Error(error);
+        },
+      ],
+    });
+
+    if (!user) {
+      throw new NotFoundError(ErrorMessages.USER_WITH_THE_ID_NOT_FOUND);
     }
+
+    return user;
   }
 
-  public static createUser(userRequestDto: CreateUserRequestDto) {
+  public static async createUser(userRequestDto: CreateUserRequestDto) {
     const { login, password, age } = userRequestDto;
-
     const id = v4();
 
-    try {
-      return UserModel.create({ id, login, password, age });
-    } catch (error) {
-      throw new Error(error);
-    }
+    return UserModel.create({ id, login, password, age });
   }
 
   public static async updateUser(
     id: string,
     updateUserRequestDto: UpdateUserRequestDto
   ) {
-    try {
-      const userToUpdate = await UserModel.findByPk(id);
-      if (!userToUpdate) {
-        return;
-      }
+    const userToUpdate = await UserModel.findByPk(id);
 
-      const updatedUser = await userToUpdate.update({
-        ...updateUserRequestDto,
-      });
-
-      return updatedUser;
-    } catch (error) {
-      throw new Error(error);
+    if (!userToUpdate) {
+      throw new NotFoundError(ErrorMessages.USER_WITH_THE_ID_NOT_FOUND);
     }
+
+    return userToUpdate.update({
+      ...updateUserRequestDto,
+    });
   }
 
   public static async deleteUserById(id: string) {
-    try {
-      UserGroupModel.destroy({
+    UserGroupModel.destroy({
+      where: {
+        userId: id,
+      },
+    });
+
+    const [numberOfDeletedRecords] = await UserModel.update(
+      {
+        isDeleted: true,
+      },
+      {
         where: {
-          userId: id,
+          id,
+          isDeleted: false,
         },
-      });
+      }
+    );
 
-      const [numberOfDeletedRecords] = await UserModel.update(
-        {
-          isDeleted: true,
-        },
-        {
-          where: {
-            id,
-            isDeleted: false,
-          },
-        }
-      );
-
-      return numberOfDeletedRecords;
-    } catch (error) {
-      throw new Error(error);
+    if (numberOfDeletedRecords === 0) {
+      throw new NotFoundError(ErrorMessages.USER_WITH_THE_ID_NOT_FOUND);
     }
+
+    return numberOfDeletedRecords;
   }
 }

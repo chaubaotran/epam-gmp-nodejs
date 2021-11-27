@@ -3,9 +3,9 @@ import Joi from "joi";
 
 const userSchema = Joi.object({
   login: Joi.string().required(),
-  password: Joi.string().pattern(
-    new RegExp("^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$")
-  ),
+  password: Joi.string()
+    .required()
+    .pattern(new RegExp("^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$")),
   age: Joi.number().required().min(4).max(130),
 });
 
