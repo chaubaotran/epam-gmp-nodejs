@@ -3,6 +3,7 @@ import UserModel from "../models/user";
 import GroupModel from "../models/group";
 import UserGroupModel from "../models/user-group";
 import { Permissions } from "../shared/enum";
+import { logger } from "../shared/logger";
 
 const userData = [
   {
@@ -54,11 +55,11 @@ export default async () => {
   await db.sync({ force: true });
 
   await UserModel.bulkCreate(userData).then(() =>
-    console.log("User data generated.")
+    logger.info("User data generated.")
   );
 
   await GroupModel.bulkCreate(groupData).then(() =>
-    console.log("Group data generated.")
+    logger.info("Group data generated.")
   );
 
   UserModel.belongsToMany(GroupModel, {

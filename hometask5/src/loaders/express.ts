@@ -5,8 +5,9 @@ import routes from "../api";
 import {
   unhandledErrorsHandlingMiddleware,
   wrongUrlErrorHandlingMiddleware,
-} from "../api/middlewares/errorHandler";
-import { serviceMethodLoggingMiddleware } from "../api/middlewares/logger";
+} from "../api/middlewares/errorHandlingMiddleware";
+import { serviceMethodLoggingMiddleware } from "../api/middlewares/loggingMiddleware";
+import { logger } from "../shared/logger";
 
 const app = express();
 app.use(express.json());
@@ -20,5 +21,5 @@ app.all("*", wrongUrlErrorHandlingMiddleware, routes.groupRouter);
 app.use(unhandledErrorsHandlingMiddleware);
 
 export default () => {
-  app.listen(config.port, () => console.log("app is running on port 3000"));
+  app.listen(config.port, () => logger.info("app is running on port 3000"));
 };

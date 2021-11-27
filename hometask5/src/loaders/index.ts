@@ -1,7 +1,7 @@
 import db from "../config/database";
 import modelLoader from "./model";
 import appLoader from "./express";
-import { logger } from "../api/middlewares/logger";
+import { logger } from "../shared/logger";
 
 export default async function (): Promise<void> {
   // Check database connection

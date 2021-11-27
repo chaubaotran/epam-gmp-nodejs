@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { logger } from "./logger";
+import { logger } from "../../shared/logger";
 
 export const unhandledErrorsHandlingMiddleware = (
   error: Error,
