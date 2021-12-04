@@ -15,6 +15,7 @@ app.use(express.json());
 
 app.use(httpLoggingMiddleware);
 
+app.use("/api", routes.authRouter);
 app.use("/api/users", routes.userRouter);
 app.use("/api/groups", routes.groupRouter);
 app.all("*", wrongUrlErrorHandlingMiddleware, routes.groupRouter);

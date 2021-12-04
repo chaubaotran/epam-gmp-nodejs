@@ -15,3 +15,11 @@ export class NotFoundError extends Error {
     this.message = message;
   }
 }
+
+export class IncorrectCredentialsError extends Error {
+  constructor(message: string) {
+    super();
+    this.name = ErrorNames.INCORRECT_CREDENTIALS_ERROR;
+    this.message = message;
+  }
+}

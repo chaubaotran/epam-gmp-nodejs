@@ -13,6 +13,8 @@ export const controllerErrorsHandlingMiddleware = (
     res.status(404).json({ error: error.message });
   } else if (error.name === ErrorNames.SEQUELIZE_DATABASE_ERROR) {
     res.status(500).json({ error: error.message });
+  } else if (error.name === ErrorNames.INCORRECT_CREDENTIALS_ERROR) {
+    res.status(400).json({ error: error.message });
   } else {
     next(error);
   }

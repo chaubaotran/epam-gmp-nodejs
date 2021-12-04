@@ -5,7 +5,7 @@ import UserModel from "../models/user";
 import GroupModel from "../models/group";
 import UserGroupModel from "../models/user-group";
 import { CreateUserRequestDto, UpdateUserRequestDto } from "../dtos/user";
-import { NotFoundError } from "../shared/error";
+import { IncorrectCredentialsError, NotFoundError } from "../shared/error";
 import { ErrorMessages } from "../shared/enum";
 
 export class UserService {
@@ -109,5 +109,17 @@ export class UserService {
     }
 
     return numberOfDeletedRecords;
+  }
+
+  public static async authenticateUser(login: string, password: string) {
+    const user = await UserModel.findOne({
+      where: { login: login, password: password, isDeleted: false },
+    });
+
+    if (!user) {
+      throw new IncorrectCredentialsError(ErrorMessages.INCORRECT_CREDENTIALS);
+    }
+
+    return user;
   }
 }
