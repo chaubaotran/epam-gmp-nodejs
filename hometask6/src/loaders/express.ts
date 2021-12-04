@@ -8,12 +8,14 @@ import {
   wrongUrlErrorHandlingMiddleware,
 } from "../api/middlewares/error-handling.middleware";
 import { httpLoggingMiddleware } from "../api/middlewares/http-logging.middleware";
+import { authenticationMiddleware } from "../api/middlewares/auth.middlewares";
 import { logger } from "../shared/logger";
 
 const app = express();
 app.use(express.json());
 
 app.use(httpLoggingMiddleware);
+app.use(authenticationMiddleware);
 
 app.use("/api", routes.authRouter);
 app.use("/api/users", routes.userRouter);
