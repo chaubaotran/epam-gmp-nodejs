@@ -26,6 +26,7 @@
     "@types/lodash": "^4.14.175",
     "@types/sequelize": "^4.28.10",
     "@types/uuid": "^8.3.1",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "joi": "^17.4.2",
@@ -38,6 +39,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "^16.11.0",

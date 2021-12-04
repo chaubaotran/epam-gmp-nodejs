@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import config from "../config";
 import routes from "../api";
@@ -12,6 +13,7 @@ import { authenticationMiddleware } from "../api/middlewares/auth.middlewares";
 import { logger } from "../shared/logger";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.use(httpLoggingMiddleware);
