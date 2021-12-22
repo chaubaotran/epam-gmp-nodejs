@@ -5,7 +5,7 @@ import UserGroupModel from "../models/user-group";
 import { Permissions } from "../shared/enum";
 import { logger } from "../shared/logger";
 
-const userData = [
+export const userData = [
   {
     id: "b4c7010c-1aa4-4a79-a56d-c807a231e98a",
     login: "Phan De",

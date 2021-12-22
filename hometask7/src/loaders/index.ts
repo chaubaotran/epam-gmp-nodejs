@@ -1,6 +1,6 @@
 import db from "../config/database";
 import modelLoader from "./model";
-import appLoader from "./express";
+import { appLoader } from "./express";
 import { logger } from "../shared/logger";
 
 export default async function (): Promise<void> {

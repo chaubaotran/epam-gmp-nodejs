@@ -27,6 +27,8 @@ app.all("*", wrongUrlErrorHandlingMiddleware, routes.groupRouter);
 app.use(controllerErrorsHandlingMiddleware);
 app.use(unhandledErrorsHandlingMiddleware);
 
-export default () => {
+export default app;
+
+export const appLoader = () => {
   app.listen(config.port, () => logger.info("app is running on port 3000"));
 };
