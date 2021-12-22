@@ -9,6 +9,7 @@
     "hometask4": "nodemon hometask4/src/app.ts",
     "hometask5": "nodemon hometask5/src/app.ts",
     "hometask6": "nodemon hometask6/src/app.ts",
+    "hometask7": "nodemon hometask7/src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
