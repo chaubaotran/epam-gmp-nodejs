@@ -55,17 +55,15 @@ const mockUsers = [
 ];
 
 describe("CHECKING USER CONTROLLER", () => {
-  beforeEach(() => {
+  beforeAll(() => {
     (httpLoggingMiddleware as jest.Mock).mockImplementation(
-      (req: Request, res: Response, next: NextFunction) =>
-        new Promise(() => next())
+      (req: Request, res: Response, next: NextFunction) => next()
     );
   });
 
-  beforeEach(() => {
+  beforeAll(() => {
     (authenticationMiddleware as jest.Mock).mockImplementation(
-      (req: Request, res: Response, next: NextFunction) =>
-        new Promise(() => next())
+      (req: Request, res: Response, next: NextFunction) => next()
     );
   });
 
